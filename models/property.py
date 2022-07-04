@@ -30,3 +30,4 @@ class Property(models.Model):
     ('sold', 'Sold'),
     ('canceled', 'Canceled')
   ], required=True, copy=False, default='new')
+  property_type_id = fields.Many2one('real.estate.property.type', string="Property Type")
