@@ -7,5 +7,6 @@
     'security/ir.model.access.csv',
     'views/real_estate_property_views.xml'
   ],
-  'application': True
+  'application': True,
+  'license': 'LGPL-3'
 }
