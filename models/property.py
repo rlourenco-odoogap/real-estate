@@ -39,6 +39,11 @@ class Property(models.Model):
   total_area = fields.Integer(compute='_compute_total_area')
   best_price = fields.Float(compute='_compute_best_price', string="Best Offer")
 
+  _sql_constraints = [
+    ('check_expected_price', 'CHECK(expected_price > 0)', 'The expected price must be strictly positive.'),
+    ('check_selling_price', 'CHECK(selling_price > 0)', 'The selling price must be positive.'),
+  ]
+
   def action_set_property_as_sold(self):
     if self.state == 'canceled':
       raise UserError('Canceled properties cannot be sold.')
@@ -67,3 +72,10 @@ class Property(models.Model):
   def _onchange_garden(self):
     self.garden_area = 10 if self.garden else 0
     self.garden_orientation = 'north' if self.garden else ''
+
+  @api.constrains('expected_price', 'selling_price')
+  def _check_expected_price(self):
+    ninety_percent_of_expected_price = self.expected_price * 0.9
+
+    if self.selling_price < ninety_percent_of_expected_price:
+      raise UserError('The selling price must be at least 90% of the expected price. You must reduce your expected price if you really want to sell.')

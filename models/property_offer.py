@@ -15,6 +15,10 @@ class PropertyOffer(models.Model):
   validity = fields.Integer(default=7, string="Validity (days)")
   date_deadline = fields.Date(compute='_compute_date_deadline', inverse='_inverse_date_deadline', string="Deadline")
 
+  _sql_constraints = [
+    ('check_price', 'CHECK(price >= 0)', 'The price must be strictly positive.')
+  ]
+
   def action_accept_offer(self):
     if self.property_id.state == 'sold':
       raise UserError("You already sold this property.")
