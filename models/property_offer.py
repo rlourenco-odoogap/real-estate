@@ -1,4 +1,5 @@
 from odoo import api, models, fields
+from odoo.exceptions import UserError
 
 class PropertyOffer(models.Model):
   _name = 'real.estate.property.offer'
@@ -13,6 +14,29 @@ class PropertyOffer(models.Model):
   property_id = fields.Many2one('real.estate.property', string="Property")
   validity = fields.Integer(default=7, string="Validity (days)")
   date_deadline = fields.Date(compute='_compute_date_deadline', inverse='_inverse_date_deadline', string="Deadline")
+
+  def action_accept_offer(self):
+    if self.property_id.state == 'sold':
+      raise UserError("You already sold this property.")
+    if self.property_id.state == 'canceled':
+      raise UserError("This property was canceled.")
+
+    self.property_id.buyer = self.partner_id
+    self.property_id.selling_price = self.price
+    self.property_id.state = 'sold'
+    self.status = 'accepted'
+
+    return True
+
+  def action_refuse_offer(self):
+    if self.property_id.state == 'sold':
+      raise UserError("You already sold this property.")
+    if self.property_id.state == 'canceled':
+      raise UserError("This property was canceled.")
+
+    self.status = 'refused'
+
+    return True
 
   @api.depends('date_deadline', 'validity')
   def _compute_date_deadline(self):
