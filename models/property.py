@@ -73,6 +73,12 @@ class Property(models.Model):
     for record in self:
       record.best_price = max(offer.price for offer in record.offer_ids) if len(record.offer_ids) > 0 else 0
 
+  @api.onchange('offer_ids')
+  def _onchange_offers(self):
+    for record in self:
+      if len(record.offer_ids) > 0:
+        record.state = 'offer_received'
+
   @api.onchange('garden')
   def _onchange_garden(self):
     self.garden_area = 10 if self.garden else 0
@@ -82,5 +88,5 @@ class Property(models.Model):
   def _check_expected_price(self):
     ninety_percent_of_expected_price = self.expected_price * 0.9
 
-    if self.selling_price < ninety_percent_of_expected_price:
+    if self.selling_price > 0 and self.selling_price < ninety_percent_of_expected_price:
       raise UserError('The selling price must be at least 90% of the expected price. You must reduce your expected price if you really want to sell.')

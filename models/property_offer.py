@@ -10,7 +10,7 @@ class PropertyOffer(models.Model):
   status = fields.Selection([
     ('accepted', 'Accepted'),
     ('refused', 'Refused')
-  ], copy=False)
+  ], copy=False, readonly=True)
   partner_id = fields.Many2one('res.partner', string="Partner")
   property_id = fields.Many2one('real.estate.property', string="Property")
   validity = fields.Integer(default=7, string="Validity (days)")
@@ -28,7 +28,7 @@ class PropertyOffer(models.Model):
 
     self.property_id.buyer = self.partner_id
     self.property_id.selling_price = self.price
-    self.property_id.state = 'sold'
+    self.property_id.state = 'offer_accepted'
     self.status = 'accepted'
 
     return True
