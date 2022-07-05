@@ -1,4 +1,5 @@
 from odoo import api, models, fields
+from odoo.exceptions import UserError
 
 class Property(models.Model):
   _name = 'real.estate.property'
@@ -29,7 +30,7 @@ class Property(models.Model):
     ('offer_accepted', 'Offer Accepted'),
     ('sold', 'Sold'),
     ('canceled', 'Canceled')
-  ], required=True, copy=False, default='new')
+  ], required=True, copy=False, default='new', string="Status")
   property_type_id = fields.Many2one('real.estate.property.type', string="Property Type")
   buyer = fields.Many2one('res.partner', copy=False)
   salesperson = fields.Many2one('res.users', default=lambda self: self.env.user, string="Salesman")
@@ -37,6 +38,20 @@ class Property(models.Model):
   offer_ids = fields.One2many('real.estate.property.offer', 'property_id', string="Offers")
   total_area = fields.Integer(compute='_compute_total_area')
   best_price = fields.Float(compute='_compute_best_price', string="Best Offer")
+
+  def action_set_property_as_sold(self):
+    if self.state == 'canceled':
+      raise UserError('Canceled properties cannot be sold.')
+
+    self.state = 'sold'
+    return True
+
+  def action_set_property_as_canceled(self):
+    if self.state == 'sold':
+      raise UserError('Sold properties cannot be canceled.')
+
+    self.state = 'canceled'
+    return True
 
   @api.depends('living_area', 'garden_area')
   def _compute_total_area(self):
