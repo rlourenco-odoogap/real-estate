@@ -53,3 +53,15 @@ class PropertyOffer(models.Model):
   def _inverse_date_deadline(self):
     for record in self:
       record.validity = (record.date_deadline - fields.Date.today()).days
+
+  @api.model
+  def create(self, vals):
+    property_object = self.env['real.estate.property'].browse(vals['property_id'])
+    max_offer_price = property_object['best_price']
+
+    if vals['price'] <= max_offer_price:
+      raise UserError('The offer must be higher than ' + str(max_offer_price))
+
+    property_object['state'] = 'offer_received'
+
+    return super().create(vals)
