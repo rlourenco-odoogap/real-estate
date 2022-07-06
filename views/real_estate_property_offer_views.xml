@@ -12,7 +12,7 @@
          <field name="name">real.estate.property.offer.tree.view</field>
          <field name="model">real.estate.property.offer</field>
          <field name="arch" type="xml">
-             <tree string="Properties">
+             <tree string="Properties" editable="True">
                 <field name="price" />
                 <field name="partner_id" />
                 <field name="validity" />
