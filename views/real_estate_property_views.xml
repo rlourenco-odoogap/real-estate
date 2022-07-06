@@ -12,7 +12,12 @@
          <field name="name">real.estate.property.tree.view</field>
          <field name="model">real.estate.property</field>
          <field name="arch" type="xml">
-             <tree string="Properties">
+             <tree 
+                string="Properties" 
+                decoration-success="state in ('offer_received', 'offer_accepted')"
+                decoration-bf="state == 'offer_accepted'"
+                decoration-muted="state == 'sold'"
+            >
                 <field name="name" />
                 <field name="tag_ids" widget="many2many_tags" />
                 <field name="postcode" />
@@ -21,6 +26,7 @@
                 <field name="expected_price" />
                 <field name="selling_price" />
                 <field name="date_availability" optional="hidden" />
+                <field name="state" invisible="1" />
              </tree>
          </field>
      </record>

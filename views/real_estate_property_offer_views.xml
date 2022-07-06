@@ -12,7 +12,12 @@
          <field name="name">real.estate.property.offer.tree.view</field>
          <field name="model">real.estate.property.offer</field>
          <field name="arch" type="xml">
-             <tree string="Properties" editable="True">
+             <tree 
+                string="Properties" 
+                editable="bottom"
+                decoration-danger="status == 'refused'"
+                decoration-success="status == 'accepted'"
+            >
                 <field name="price" />
                 <field name="partner_id" />
                 <field name="validity" />
@@ -31,7 +36,7 @@
                     attrs="{'invisible': ['|', ('status', '=', 'accepted'), ('status', '=', 'refused')]}" 
                 />
 
-                <field name="status" />
+                <field name="status" invisible="1" />
              </tree>
          </field>
      </record>
