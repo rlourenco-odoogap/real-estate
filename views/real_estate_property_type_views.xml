@@ -30,6 +30,12 @@
                         <field name="name" />
                     </h1>
 
+                    <button 
+                        type="action" 
+                        name="%(real_estate.real_estate_property_offer_action)d" 
+                        string="Offers"
+                    />
+
                     <notebook>
                         <page string="Properties">
                             <field name="property_ids">

@@ -5,6 +5,7 @@
         <field name="name">Property Offers</field>
         <field name="res_model">real.estate.property.offer</field>
         <field name="view_mode">tree,form</field>
+        <field name="domain">[('property_type_id', '=', active_id)]</field>
     </record>
 
     <!-- Tree View -->
